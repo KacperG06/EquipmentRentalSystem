@@ -1,6 +1,6 @@
 import java.util.List;
 
-public interface DataManager {
-    public void save(List list);
-    public List load();
+public interface DataManager<T> {
+    void save(List <T> list);
+    List<T> load();
 }

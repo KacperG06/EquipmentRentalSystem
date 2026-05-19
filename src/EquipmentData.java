@@ -1,2 +1,3 @@
-public class EquipmentData {
+public class EquipmentData implements DataManager{
+    private String file;
 }

@@ -1,2 +1,3 @@
-public class RentalData {
+public class RentalData implements DataManager{
+    private String file;
 }
