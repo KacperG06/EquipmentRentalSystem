@@ -14,4 +14,9 @@ public class LightEquipment extends Equipment {
             return false;
         }
     }
+
+    @Override
+    public boolean canBeRentedBy(User user) {
+        return true;
+    }
 }

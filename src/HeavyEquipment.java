@@ -20,4 +20,12 @@ public class HeavyEquipment extends Equipment{
     public String getLicensePlate() {
         return this.licensePlate;
     }
+
+    @Override
+    public boolean canBeRentedBy(User user) {
+        if(user.hasDriverLicense()){
+            return true;
+        }
+        else return false;
+    }
 }

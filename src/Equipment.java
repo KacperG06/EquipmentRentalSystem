@@ -28,6 +28,9 @@ public abstract class Equipment {
         }
     }
 
+    public boolean canBeRentedBy(User user){
+    }
+
     public int getId() {
         return this.id;
     }

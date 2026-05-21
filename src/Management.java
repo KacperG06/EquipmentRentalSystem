@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class Management {
     private UserData userData;
     private EquipmentData equipmentData;
     private RentalData rentalData;
-
+    int lastRentalIdNumber = 0;
     public Management(){
         this.userData = new UserData("users.txt");
         this.equipmentData = new EquipmentData("equipment.txt");
@@ -24,24 +25,42 @@ public class Management {
     }
 
     public void addUser(User user){
-
+        userList.add(user);
+        System.out.println("Pomyślnie dodano użytkownika: " + user.getName() + user.getSurname());
     }
 
     public void addEquipment(Equipment equipment){
-
+        equipmentList.add(equipment);
     }
 
 
-    public void rentEquipment(User user, Equipment equipment, LocalDateTime endDate){
-
+    public void rentEquipment(User user, Equipment equipment, LocalDateTime endDate)throws IllegalArgumentException, EquipmentUnavailableExcpetion, NoDrivingLicenseException, IllegalDateException{
+        if((user == null) && (equipment == null) && (endDate == null)){
+            throw new IllegalArgumentException();
+        }
+        if(!equipment.isAvailable()){
+            throw new EquipmentUnavailableExcpetion();
+        }
+        if(!equipment.canBeRentedBy(user)){
+            throw new NoDrivingLicenseException();
+        }
+        if(endDate.isBefore(LocalDateTime.now())){
+            throw new IllegalDateException();
+        }
+        Rental newRental = new Rental(lastRentalIdNumber, user, equipment, LocalDateTime.now(), endDate, calculateTotalCost(equipment, LocalDateTime.now(), endDate));
+        activeRentals.add(newRental);
     }
 
     public void returnEquipment(Rental rental){
-
+        if(rental.getEndDate().isBefore(LocalDateTime.now())){
+            rentalHistory.add(rental);
+            activeRentals.remove(rental);
+        }
     }
 
     private double calculateTotalCost(Equipment equipment, LocalDateTime startDate, LocalDateTime endDate){
-
+        int numOfDays = Period.between(LocalDateTime startDate,LocalDateTime endDate);
+        return equipment.getPrice() * 0.05 * numOfDays;
     }
 
     public List<User> getUserList() {
