@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +11,14 @@ public class UserData implements DataManager<User> {
 
     @Override
     public void save(List<User> users) {
-        System.out.println("Zapisano dane uzytkownikow: "+file);
+        try(FileWriter fileWriter = new FileWriter(new File(file))){
+            for (User user : users){
+                fileWriter.write(user.getName() +";" + user.getSurname() + ";" + user.getPhoneNumber() + ";" +user.getEmail() + ";" + user.getPesel() + ";" + user.getAge() + ";" + user.hasDriverLicense()+"\n");
+            }
+
+        } catch (IOException e) {
+            System.out.println("Błąd zapisu!");
+        }
 
     }
 
