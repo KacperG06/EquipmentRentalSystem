@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +11,22 @@ public class EquipmentData implements DataManager<Equipment>{
 
     @Override
     public void save(List<Equipment> equipment) {
-        System.out.println("Zapisano liste sprzętu: "+file);
+        try (FileWriter fileWriter = new FileWriter(new File(file))){
+            for (Equipment eq : equipment){
+                String line = eq.getId() + ";" + eq.getName() + ";" + eq.getPrice() + ";" + eq.getRentalStatus();
+                if (eq instanceof HeavyEquipment){
+                    String heavyeq = line + ";" + ((HeavyEquipment) eq).hasDriverLicense() + ";" + ((HeavyEquipment) eq).getLicensePlate() + "\n";
+                    fileWriter.write(heavyeq);
+                } else if (eq instanceof  LightEquipment) {
+                    String lighteq = line + ";" + ((LightEquipment) eq).isTransportRequired() + "\n";
+                    fileWriter.write(lighteq);
+                }
+
+            }
+        }
+        catch (IOException e ){
+            System.out.println("bład zapisu pliku");
+        }
 
     }
 
