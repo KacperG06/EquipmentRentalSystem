@@ -17,7 +17,7 @@ public class UserData implements DataManager<User> {
             }
 
         } catch (IOException e) {
-            System.out.println("Błąd zapisu!");
+            throw new RuntimeException("Bład zapisu pliku");
         }
 
     }
@@ -37,10 +37,10 @@ public class UserData implements DataManager<User> {
             }
 
         } catch (FileNotFoundException e) {
-            System.out.println("Nie znaleziono pliku!");
+            throw new RuntimeException("Nie znaleziono plik");
         }
         catch (IOException e){
-            System.out.println("Coś poszło nie tak!");
+            throw new RuntimeException("Bład odczytu pliku");
         }
 
         return userList;

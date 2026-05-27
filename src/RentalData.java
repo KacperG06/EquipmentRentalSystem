@@ -25,7 +25,7 @@ public class RentalData implements DataManager<Rental>{
 
         }
         catch (IOException e){
-            System.out.println("Błąd zapisu pliku!");
+            throw new RuntimeException("Bład zapisu pliku");
         }
 
     }
@@ -68,7 +68,7 @@ public class RentalData implements DataManager<Rental>{
             System.out.println("Nie znaleziono pliku");
         }
         catch (IOException e){
-            System.out.println("Coś poszło nie tak!");
+            throw new RuntimeException("Bład odczytu pliku");
         }
         return rentalList;
 

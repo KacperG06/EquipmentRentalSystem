@@ -25,8 +25,9 @@ public class EquipmentData implements DataManager<Equipment>{
             }
         }
         catch (IOException e ){
-            System.out.println("bład zapisu pliku");
+            throw new RuntimeException("Bład zapisu pliku");
         }
+
 
     }
 
@@ -54,12 +55,11 @@ public class EquipmentData implements DataManager<Equipment>{
 
             }
         }
-        catch (FileNotFoundException e){
-            System.out.println("Nie znaleziono pliku");
+        catch (FileNotFoundException e) {
+            throw new RuntimeException("Nie znaleziono plik");
         }
         catch (IOException e){
-            System.out.println("Coś poszło nie tak!");
-        }
+            throw new RuntimeException("Bład odczytu pliku");        }
         return equipmentList;
     }
 }
