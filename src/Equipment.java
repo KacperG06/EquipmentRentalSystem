@@ -42,4 +42,6 @@ public abstract class Equipment {
     public double getPrice() {
         return this.price;
     }
+
+    public boolean getRentalStatus(){return this.rentalStatus}
 }
