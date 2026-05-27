@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +16,17 @@ public class RentalData implements DataManager<Rental>{
 
     @Override
     public void save(List<Rental> rentals) {
-        System.out.println("Zapisano wypozyczenia: "+file);
+        try(FileWriter fileWriter = new FileWriter(new File(file))) {
+            String line;
+            for (Rental rental : rentals){
+                line = rental.getId() + ";" + rental.getUser().getPesel() + ";" + rental.getEquipment().getId() + ";" + rental.getStartDate() + ";" + rental.getEndDate() + ";" + rental.getTotalCost() + "\n";
+                fileWriter.write(line);
+            }
+
+        }
+        catch (IOException e){
+            System.out.println("Błąd zapisu pliku!");
+        }
 
     }
 
