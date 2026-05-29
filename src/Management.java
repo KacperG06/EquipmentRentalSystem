@@ -17,10 +17,11 @@ public class Management {
     public Management(){
         this.userData = new UserData("users.txt");
         this.equipmentData = new EquipmentData("equipment.txt");
-        this.rentalData = new RentalData("rentals.txt");
 
         this.userList = userData.load();
         this.equipmentList = equipmentData.load();
+
+        this.rentalData = new RentalData("rentals.txt",userList,equipmentList);
         this.rentalHistory = rentalData.load();
     }
 
@@ -35,7 +36,7 @@ public class Management {
 
 
     public void rentEquipment(User user, Equipment equipment, LocalDateTime endDate)throws IllegalArgumentException, EquipmentUnavailableExcpetion, NoDrivingLicenseException, IllegalDateException{
-        if((user == null) && (equipment == null) && (endDate == null)){
+        if((user == null) || (equipment == null) || (endDate == null)){
             throw new IllegalArgumentException();
         }
         if(!equipment.isAvailable()){
@@ -47,8 +48,10 @@ public class Management {
         if(endDate.isBefore(LocalDateTime.now())){
             throw new IllegalDateException();
         }
-        Rental newRental = new Rental(lastRentalIdNumber, user, equipment, LocalDateTime.now(), endDate, calculateTotalCost(equipment, LocalDateTime.now(), endDate));
+        Rental newRental = new Rental(++lastRentalIdNumber, user, equipment, LocalDateTime.now(), endDate, calculateTotalCost(equipment, LocalDateTime.now(), endDate));
+        equipment.setRented();
         activeRentals.add(newRental);
+        System.out.println("Pomyślnie wypożyczono: " + equipment.getName() + " dla użytkownika: " + user.getName());
     }
 
     public void returnEquipment(Rental rental){
@@ -59,7 +62,7 @@ public class Management {
     }
 
     private double calculateTotalCost(Equipment equipment, LocalDateTime startDate, LocalDateTime endDate){
-        int numOfDays = Period.between(LocalDateTime startDate,LocalDateTime endDate);
+        int numOfDays = Period.between(startDate.toLocalDate(), endDate.toLocalDate()).getDays();
         return equipment.getPrice() * 0.05 * numOfDays;
     }
 
