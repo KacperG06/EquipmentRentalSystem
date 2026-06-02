@@ -14,16 +14,26 @@ public class Management {
     private EquipmentData equipmentData;
     private RentalData rentalData;
     int lastRentalIdNumber = 0;
-    public Management(){
-        this.userData = new UserData("users.txt");
-        this.equipmentData = new EquipmentData("equipment.txt");
+    public Management(String usersFile, String equipmentFile, String rentalsFile){
+        this.userData = new UserData(usersFile);
+        this.equipmentData = new EquipmentData(equipmentFile);
 
         this.userList = userData.load();
         this.equipmentList = equipmentData.load();
 
-        this.rentalData = new RentalData("rentals.txt",userList,equipmentList);
-        this.rentalHistory = rentalData.load();
+        List<Rental> allRentals = rentalData.load();
+        this.rentalData = new RentalData(rentalsFile,userList,equipmentList);
+        this.rentalHistory = new ArrayList<>();
         this.activeRentals = new ArrayList<>();
+
+        for (Rental rental : allRentals){
+            if (!rental.getEquipment().isAvailable()){
+                this.activeRentals.add(rental);
+            }
+            else {
+                this.rentalHistory.add(rental);
+            }
+        }
     }
 
     public void addUser(User user){
@@ -57,10 +67,8 @@ public class Management {
     }
 
     public void returnEquipment(Rental rental){
-        if(rental.getEndDate().isBefore(LocalDateTime.now())){
-            rentalHistory.add(rental);
-            activeRentals.remove(rental);
-        }
+        rentalHistory.add(rental);
+        activeRentals.remove(rental);
     }
 
     private double calculateTotalCost(Equipment equipment, LocalDateTime startDate, LocalDateTime endDate){
@@ -82,5 +90,17 @@ public class Management {
 
     public List<Rental> getRentalHistory() {
         return rentalHistory;
+    }
+
+    public void saveAllData(){
+        userData.save(userList);
+        equipmentData.save(equipmentList);
+
+        List<Rental> allRentalsToSave = new ArrayList<>();
+
+        allRentalsToSave.addAll(rentalHistory);
+        allRentalsToSave.addAll(activeRentals);
+
+        rentalData.save(allRentalsToSave);
     }
 }

@@ -4,8 +4,15 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args){
-        Management management = new Management();
         Scanner scanner = new Scanner(System.in);
+        System.out.print("Podaj nazwe pliku z uzytkownikami");
+        String usersFile = scanner.nextLine();
+        System.out.print("Podaj nazwe pliku z lista sprzetu");
+        String equimentFile = scanner.nextLine();
+        System.out.print("Podaj nazwe pliku z wypozyczeniami");
+        String rentalsFile = scanner.nextLine();
+        Management management = new Management(usersFile, equimentFile, rentalsFile);
+
         //Interfejs
         int option = -1;
         do {
@@ -180,6 +187,7 @@ public class Main {
                 }
 
             }while(option != 0);
+        management.saveAllData();
         System.out.println("Pomyslnie zapisano i zakończono program");
 
 
