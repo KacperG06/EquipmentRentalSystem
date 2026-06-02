@@ -6,6 +6,7 @@ public class Main {
         Management management = new Management();
         Scanner scanner = new Scanner(System.in);
         //Interfejs
+        int option = -1;
         do {
             System.out.println("Wybierz opcje: ");
             System.out.println("1.Dodaj klienta");
@@ -14,7 +15,7 @@ public class Main {
             System.out.println("4.Wypożyczenie sprzętu");
             System.out.println("5.Zwrócenie sprzętu");
             System.out.println("0.Zamknij i zapisz program");
-            int option = Integer.parseInt(scanner.nextLine());
+            option = Integer.parseInt(scanner.nextLine());
 
                 switch (option){
                     case 1: {
@@ -26,12 +27,19 @@ public class Main {
                         String phoneNumber = scanner.nextLine();
                         System.out.print("Podaj email: ");
                         String email = scanner.nextLine();
-                        System.out.print("Podaj pesel (11 znakow): ");
-                        String pesel = scanner.nextLine();
+                        String pesel = "";
+                        do {
+                            System.out.print("Podaj pesel (11 znakow): ");
+                            pesel = scanner.nextLine();
+                            if (pesel.length() != 11){
+                                System.out.println("Pesel musi zawierac 11 znaków");
+                            }
+                        } while (pesel.length() != 11);
+
                         System.out.print("Podaj wiek: ");
                         int age = Integer.parseInt(scanner.nextLine());
                         System.out.println("Czy posiadasz prawo jazdy (t/n)");
-                        boolean driverLicense;
+                        boolean driverLicense = false;
                         String pomDl;
                         do {
                             System.out.print("Czy potrzebne prawo jazdy (t/n): ");
@@ -54,7 +62,7 @@ public class Main {
                         String equimpentName = scanner.nextLine();
                         System.out.print("Podaj cenę sprzętu: ");
                         double price = Double.parseDouble(scanner.nextLine());
-                        boolean driverLicenseEq;
+                        boolean driverLicenseEq = false;
                         String pomDlE;
                         do {
                             System.out.print("Czy potrzebne prawo jazdy (t/n): ");
@@ -67,8 +75,15 @@ public class Main {
                                 System.out.print("Nieznana opcja. Podaj (t/n): ");
                             }
                         } while (!pomDlE.equals("t") && !pomDlE.equals("n"));
-                        System.out.print("Podaj numer rejestracyjny pojazdy (5 znakow): ");
-                        String licensePlate = scanner.nextLine();
+
+                        String licensePlate = "";
+                        do {
+                            System.out.print("Podaj numer rejestracyjny pojazdy (5 znakow): ");
+                            licensePlate = scanner.nextLine();
+                            if (licensePlate.length() != 5){
+                                System.out.println("Tablica rejestracyjna musi miec 5 znaków!");
+                            }
+                        } while (licensePlate.length() != 5);
                         management.addEquipment(new HeavyEquipment(id, equimpentName, price, driverLicenseEq, licensePlate));
                         break;
                     }
@@ -79,10 +94,10 @@ public class Main {
                         String equimpentName = scanner.nextLine();
                         System.out.print("Podaj cenę sprzętu: ");
                         double price = Double.parseDouble(scanner.nextLine());
-                        boolean transport;
+                        boolean transport = false;
                         String pomT;
                         do {
-                            System.out.print("Czy potrzebne prawo jazdy (t/n): ");
+                            System.out.print("Czy wymagany transport (t/n): ");
                             pomT = scanner.nextLine().toLowerCase();
                             if (pomT.equals("t")) {
                                 transport = true;
