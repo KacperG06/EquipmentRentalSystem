@@ -32,6 +32,7 @@ public class Management {
 
     public void addEquipment(Equipment equipment){
         equipmentList.add(equipment);
+        System.out.println("Pomyślnie dodano sprzęt: " + equipment.getName());
     }
 
 
