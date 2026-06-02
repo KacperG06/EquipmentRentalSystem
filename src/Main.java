@@ -1,4 +1,5 @@
 import java.sql.SQLOutput;
+import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class Main {
@@ -31,26 +32,24 @@ public class Main {
                         do {
                             System.out.print("Podaj pesel (11 znakow): ");
                             pesel = scanner.nextLine();
-                            if (pesel.length() != 11){
+                            if (!checkPesel(pesel)){
                                 System.out.println("Pesel musi zawierac 11 znaków");
                             }
-                        } while (pesel.length() != 11);
+                        } while (!checkPesel(pesel));
 
                         System.out.print("Podaj wiek: ");
                         int age = Integer.parseInt(scanner.nextLine());
-                        System.out.println("Czy posiadasz prawo jazdy (t/n)");
                         boolean driverLicense = false;
                         String pomDl;
                         do {
-                            System.out.print("Czy potrzebne prawo jazdy (t/n): ");
+                            System.out.println("Czy posiadasz prawo jazdy (t/n)");
                             pomDl = scanner.nextLine().toLowerCase();
-                            if (pomDl.equals("t")) {
-                                driverLicense = true;
-                            } else if (pomDl.equals("n")) {
-                                driverLicense = false;
-                            } else {
-                                System.out.print("Nieznana opcja. Podaj (t/n): ");
+                            if (!pomDl.equals("t") && !pomDl.equals("n")) {
+                                System.out.println("Wpisz t albo n!");
+                            } else{
+                                driverLicense = setBoolean(pomDl);
                             }
+
                         } while (!pomDl.equals("t") && !pomDl.equals("n"));
                         management.addUser(new User(name, surname, phoneNumber, email, pesel, age, driverLicense));
                         break;
@@ -67,12 +66,10 @@ public class Main {
                         do {
                             System.out.print("Czy potrzebne prawo jazdy (t/n): ");
                             pomDlE = scanner.nextLine().toLowerCase();
-                            if (pomDlE.equals("t")) {
-                                driverLicenseEq = true;
-                            } else if (pomDlE.equals("n")) {
-                                driverLicenseEq = false;
-                            } else {
-                                System.out.print("Nieznana opcja. Podaj (t/n): ");
+                            if (!pomDlE.equals("t") && !pomDlE.equals("n")) {
+                                System.out.println("Wpisz t albo n!");
+                            } else{
+                                driverLicenseEq = setBoolean(pomDlE);
                             }
                         } while (!pomDlE.equals("t") && !pomDlE.equals("n"));
 
@@ -80,10 +77,10 @@ public class Main {
                         do {
                             System.out.print("Podaj numer rejestracyjny pojazdy (5 znakow): ");
                             licensePlate = scanner.nextLine();
-                            if (licensePlate.length() != 5){
+                            if (!checkLicensePlate(licensePlate)){
                                 System.out.println("Tablica rejestracyjna musi miec 5 znaków!");
                             }
-                        } while (licensePlate.length() != 5);
+                        } while (!checkLicensePlate(licensePlate));
                         management.addEquipment(new HeavyEquipment(id, equimpentName, price, driverLicenseEq, licensePlate));
                         break;
                     }
@@ -99,15 +96,62 @@ public class Main {
                         do {
                             System.out.print("Czy wymagany transport (t/n): ");
                             pomT = scanner.nextLine().toLowerCase();
-                            if (pomT.equals("t")) {
-                                transport = true;
-                            } else if (pomT.equals("n")) {
-                                transport = false;
-                            } else {
-                                System.out.print("Nieznana opcja. Podaj (t/n): ");
+                            if (!pomT.equals("t") && !pomT.equals("n")) {
+                                System.out.println("Wpisz t albo n!");
+                            } else{
+                                transport = setBoolean(pomT);
                             }
+
                         } while (!pomT.equals("t") && !pomT.equals("n"));
                         management.addEquipment(new LightEquipment(id, equimpentName, price, transport));
+                        break;
+                    }
+                    case 4: {
+                        String peselR = "";
+                        do {
+                            System.out.print("Podaj pesel (11 znakow): ");
+                            peselR = scanner.nextLine();
+                            if (!checkPesel(peselR)){
+                                System.out.println("Pesel musi zawierac 11 znaków");
+                            }
+                        } while (!checkPesel(peselR));
+
+                        System.out.print("Podaj id sprzetu do wypozycenia: ");
+                        int equipmentIdR = Integer.parseInt(scanner.nextLine());
+                        User userFound = null;
+                        Equipment founfEquipment = null;
+
+                        for (User user : management.getUserList()){
+                            if (peselR.equals(user.getPesel())) {
+                                userFound = user;
+                                break;
+                            }
+                        }
+
+                        for (Equipment equipment : management.getEquipmentList()){
+                            if (equipmentIdR == equipment.getId()){
+                                founfEquipment = equipment;
+                                break;
+                            }
+                        }
+
+                        System.out.print("Na ile dni chcesz wypozyczyc? ");
+                        int days = Integer.parseInt(scanner.nextLine());
+
+                        LocalDateTime endDate = LocalDateTime.now().plusDays(days);
+                        try{
+                            management.rentEquipment(userFound, founfEquipment, endDate);
+
+                        }catch (IllegalArgumentException e){
+                            System.out.println("Nie znaleziono uzytkownika lub sprzętu");
+                        } catch (EquipmentUnavailableExcpetion e){
+                            System.out.println("Sprzet jest niedostępny!");
+                        } catch (NoDrivingLicenseException e){
+                            System.out.println("Brak Prawa jazdy");
+                        } catch (IllegalDateException e){
+                            System.out.println("Nieprawidlowa koncowa data");
+                        }
+
                         break;
                     }
                     default:
@@ -120,5 +164,29 @@ public class Main {
         System.out.println("Pomyslnie zapisano i zakończono program");
 
 
+    }
+
+    private static boolean checkPesel(String pesel){
+        if (pesel.length() == 11){
+            return true;
+        }
+        else return false;
+
+    }
+
+    private static boolean checkLicensePlate(String licencePlate){
+        if (licencePlate.length() == 5){
+            return true;
+        }
+        else return false;
+
+    }
+
+    private static boolean setBoolean(String pom){
+        if (pom.equals("t")){
+            return true;
+        } else {
+            return false;
+        }
     }
 }
