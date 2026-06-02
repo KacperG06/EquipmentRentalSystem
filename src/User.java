@@ -45,4 +45,9 @@ public class User {
     public boolean hasDriverLicense() {
         return driverLicense;
     }
+
+    @Override
+    public String toString() {
+        return "|Imie: " + name + " |nazwisko: " + surname + " |pesel: " + pesel + " |numerTelefonu: " + phoneNumber + " |email: " + email + " |wiek: " + age + " |prawo jazdy: " + (driverLicense ? "tak" : "nie") + "|";
+    }
 }

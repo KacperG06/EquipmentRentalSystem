@@ -65,7 +65,7 @@ public class RentalData implements DataManager<Rental>{
             }
 
         } catch (FileNotFoundException e) {
-            System.out.println("Nie znaleziono pliku");
+            System.out.println("Nie znaleziono pliku, utworzono nowy");;
         }
         catch (IOException e){
             throw new RuntimeException("Bład odczytu pliku");

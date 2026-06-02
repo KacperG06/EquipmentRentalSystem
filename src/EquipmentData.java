@@ -43,20 +43,26 @@ public class EquipmentData implements DataManager<Equipment>{
                 boolean rentalStatus = Boolean.parseBoolean(data[3]);
                 if (data.length > 5){
                     boolean driverLicense = Boolean.parseBoolean(data[4]);
-                    HeavyEquipment newHeavy = new HeavyEquipment(id, data[1], price, rentalStatus, driverLicense, data[5]);
+                    HeavyEquipment newHeavy = new HeavyEquipment(id, data[1], price, driverLicense, data[5]);
+                    if (rentalStatus){
+                        newHeavy.setRented();
+                    }
                     equipmentList.add(newHeavy);
 
                 }
                 else {
                     boolean transportRequired = Boolean.parseBoolean(data[4]);
-                    LightEquipment newLight = new LightEquipment(id, data[1], price, rentalStatus, transportRequired);
+                    LightEquipment newLight = new LightEquipment(id, data[1], price, transportRequired);
+                    if (rentalStatus) {
+                        newLight.setRented();
+                    }
                     equipmentList.add(newLight);
                 }
 
             }
         }
         catch (FileNotFoundException e) {
-            throw new RuntimeException("Nie znaleziono plik");
+            System.out.println("Nie znaleziono pliku, utworzono nowy");;
         }
         catch (IOException e){
             throw new RuntimeException("Bład odczytu pliku");        }

@@ -43,4 +43,10 @@ public abstract class Equipment {
     }
 
     public boolean getRentalStatus(){return this.rentalStatus;}
+
+    @Override
+    public String toString() {
+        return "|Id: " + getId() + " |Nazwa: " + getName() + " |cena: " + getPrice() + "|";
+    }
+
 }

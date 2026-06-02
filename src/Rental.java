@@ -40,4 +40,6 @@ public class Rental {
     public double getTotalCost() {
         return totalCost;
     }
+
+
 }

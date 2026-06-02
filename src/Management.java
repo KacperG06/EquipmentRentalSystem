@@ -14,12 +14,15 @@ public class Management {
     private EquipmentData equipmentData;
     private RentalData rentalData;
     int lastRentalIdNumber = 0;
+
     public Management(String usersFile, String equipmentFile, String rentalsFile){
         this.userData = new UserData(usersFile);
         this.equipmentData = new EquipmentData(equipmentFile);
 
         this.userList = userData.load();
         this.equipmentList = equipmentData.load();
+
+        this.rentalData = new RentalData(rentalsFile, this.userList, this.equipmentList);
 
         List<Rental> allRentals = rentalData.load();
         this.rentalData = new RentalData(rentalsFile,userList,equipmentList);

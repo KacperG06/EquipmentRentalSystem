@@ -1,3 +1,4 @@
+import java.io.FileOutputStream;
 import java.sql.SQLOutput;
 import java.time.LocalDateTime;
 import java.util.Scanner;
@@ -5,11 +6,11 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args){
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Podaj nazwe pliku z uzytkownikami");
+        System.out.print("Podaj nazwe pliku z uzytkownikami: ");
         String usersFile = scanner.nextLine();
-        System.out.print("Podaj nazwe pliku z lista sprzetu");
+        System.out.print("Podaj nazwe pliku z lista sprzetu: ");
         String equimentFile = scanner.nextLine();
-        System.out.print("Podaj nazwe pliku z wypozyczeniami");
+        System.out.print("Podaj nazwe pliku z wypozyczeniami: ");
         String rentalsFile = scanner.nextLine();
         Management management = new Management(usersFile, equimentFile, rentalsFile);
 
@@ -22,6 +23,10 @@ public class Main {
             System.out.println("3.Dodaj sprzęt lekki");
             System.out.println("4.Wypożyczenie sprzętu");
             System.out.println("5.Zwrócenie sprzętu");
+            System.out.println("6.Wyswietl wszystkich uzytkownikow");
+            System.out.println("7.Wyswietl caly asortyment wypozyczalni");
+            System.out.println("8.wyswietl sprzet dla danego uzytkowka");
+            System.out.println("9.wyswietl uzytkownikow dla danego sprzetu");
             System.out.println("0.Zamknij i zapisz program");
             option = Integer.parseInt(scanner.nextLine());
 
@@ -177,6 +182,66 @@ public class Main {
                             System.out.println("Pomyślnie zwrócono sprzęt: " + rentalPom.getEquipment().getName());
                         } else {
                             System.out.println("Nie ma takiego wyporzyczenia!");
+                        }
+                        break;
+                    }
+                    case 6:{
+                        System.out.println("Lista wszystkich klientow:");
+                        for (User user : management.getUserList()){
+                            System.out.println(user);
+                        }
+                        break;
+                    }
+                    case 7:{
+                        System.out.println("Lista Sprzetu w wypozyczalni:");
+                        for (Equipment equipment : management.getEquipmentList()){
+                            System.out.println(equipment);
+                        }
+                        break;
+                    }
+                    case 8:{
+                        String peselSearch = "";
+                        boolean foundUser= false;
+                        do {
+                            System.out.print("Podaj pesel aby sprawdzic wypozyczenia (11 znakow): ");
+                            peselSearch = scanner.nextLine();
+                            if (!checkPesel(peselSearch)) {
+                                System.out.println("Pesel musi zawierac 11 znaków");
+                            }
+                        } while (!checkPesel(peselSearch));
+                        System.out.println("Sprzet wypozyczony przez: " + peselSearch);
+                        for (Rental rental : management.getActiveRentals()){
+                            if (rental.getUser().getPesel().equals(peselSearch)){
+                                System.out.println("- "+rental.getEquipment().getName() + " id: " + rental.getEquipment().getId());
+                                foundUser = true;
+                            }
+                        }
+                        System.out.println("Historia wypozyczen! ");
+                        for (Rental rental : management.getRentalHistory()){
+                            if (rental.getUser().getPesel().equals(peselSearch)){
+                                System.out.println("- " + rental.getEquipment().getName() + " id: " + rental.getEquipment().getId());
+                                foundUser = true;
+                            }
+                        }
+                        if (!foundUser){
+                            System.out.println("Ten klient nie ma wypozyczonego sprzetu");
+                        }
+                        break;
+                    }
+                    case 9:{
+                        System.out.print("Podaj id sprzetu ktorego szukasz: ");
+                        int equipmentSearchId = Integer.parseInt(scanner.nextLine());
+                        boolean foundEquipment = false;
+
+                        for (Rental rental : management.getActiveRentals()){
+                            if (rental.getEquipment().getId() == equipmentSearchId){
+                                System.out.println("Sprzęt wypozyczony przez : " + rental.getUser().getName() + " " + rental.getUser().getSurname() + " Telefon: " + rental.getUser().getPhoneNumber());
+                                foundEquipment = true;
+                                break;
+                            }
+                        }
+                        if (!foundEquipment){
+                            System.out.println("Ten sprzet nie jest obecnie wypozyczony");
                         }
                         break;
                     }

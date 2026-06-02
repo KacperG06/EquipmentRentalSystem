@@ -37,7 +37,7 @@ public class UserData implements DataManager<User> {
             }
 
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Nie znaleziono plik");
+            System.out.println("Nie znaleziono pliku, utworzono nowy");;
         }
         catch (IOException e){
             throw new RuntimeException("Bład odczytu pliku");
