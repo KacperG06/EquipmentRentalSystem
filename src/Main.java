@@ -18,7 +18,7 @@ public class Main {
             System.out.println("0.Zamknij i zapisz program");
             option = Integer.parseInt(scanner.nextLine());
 
-                switch (option){
+                switch (option) {
                     case 1: {
                         System.out.print("Podaj imie: ");
                         String name = scanner.nextLine();
@@ -32,7 +32,7 @@ public class Main {
                         do {
                             System.out.print("Podaj pesel (11 znakow): ");
                             pesel = scanner.nextLine();
-                            if (!checkPesel(pesel)){
+                            if (!checkPesel(pesel)) {
                                 System.out.println("Pesel musi zawierac 11 znaków");
                             }
                         } while (!checkPesel(pesel));
@@ -46,7 +46,7 @@ public class Main {
                             pomDl = scanner.nextLine().toLowerCase();
                             if (!pomDl.equals("t") && !pomDl.equals("n")) {
                                 System.out.println("Wpisz t albo n!");
-                            } else{
+                            } else {
                                 driverLicense = setBoolean(pomDl);
                             }
 
@@ -68,7 +68,7 @@ public class Main {
                             pomDlE = scanner.nextLine().toLowerCase();
                             if (!pomDlE.equals("t") && !pomDlE.equals("n")) {
                                 System.out.println("Wpisz t albo n!");
-                            } else{
+                            } else {
                                 driverLicenseEq = setBoolean(pomDlE);
                             }
                         } while (!pomDlE.equals("t") && !pomDlE.equals("n"));
@@ -77,7 +77,7 @@ public class Main {
                         do {
                             System.out.print("Podaj numer rejestracyjny pojazdy (5 znakow): ");
                             licensePlate = scanner.nextLine();
-                            if (!checkLicensePlate(licensePlate)){
+                            if (!checkLicensePlate(licensePlate)) {
                                 System.out.println("Tablica rejestracyjna musi miec 5 znaków!");
                             }
                         } while (!checkLicensePlate(licensePlate));
@@ -98,7 +98,7 @@ public class Main {
                             pomT = scanner.nextLine().toLowerCase();
                             if (!pomT.equals("t") && !pomT.equals("n")) {
                                 System.out.println("Wpisz t albo n!");
-                            } else{
+                            } else {
                                 transport = setBoolean(pomT);
                             }
 
@@ -111,7 +111,7 @@ public class Main {
                         do {
                             System.out.print("Podaj pesel (11 znakow): ");
                             peselR = scanner.nextLine();
-                            if (!checkPesel(peselR)){
+                            if (!checkPesel(peselR)) {
                                 System.out.println("Pesel musi zawierac 11 znaków");
                             }
                         } while (!checkPesel(peselR));
@@ -121,15 +121,15 @@ public class Main {
                         User userFound = null;
                         Equipment founfEquipment = null;
 
-                        for (User user : management.getUserList()){
+                        for (User user : management.getUserList()) {
                             if (peselR.equals(user.getPesel())) {
                                 userFound = user;
                                 break;
                             }
                         }
 
-                        for (Equipment equipment : management.getEquipmentList()){
-                            if (equipmentIdR == equipment.getId()){
+                        for (Equipment equipment : management.getEquipmentList()) {
+                            if (equipmentIdR == equipment.getId()) {
                                 founfEquipment = equipment;
                                 break;
                             }
@@ -139,19 +139,38 @@ public class Main {
                         int days = Integer.parseInt(scanner.nextLine());
 
                         LocalDateTime endDate = LocalDateTime.now().plusDays(days);
-                        try{
+                        try {
                             management.rentEquipment(userFound, founfEquipment, endDate);
 
-                        }catch (IllegalArgumentException e){
+                        } catch (IllegalArgumentException e) {
                             System.out.println("Nie znaleziono uzytkownika lub sprzętu");
-                        } catch (EquipmentUnavailableExcpetion e){
+                        } catch (EquipmentUnavailableExcpetion e) {
                             System.out.println("Sprzet jest niedostępny!");
-                        } catch (NoDrivingLicenseException e){
+                        } catch (NoDrivingLicenseException e) {
                             System.out.println("Brak Prawa jazdy");
-                        } catch (IllegalDateException e){
+                        } catch (IllegalDateException e) {
                             System.out.println("Nieprawidlowa koncowa data");
                         }
 
+                        break;
+                    }
+                    case 5: {
+                        System.out.print("Podaj id sprzętu, który chcesz zwrócić: ");
+                        int equipmentIdToReturn = Integer.parseInt(scanner.nextLine());
+                        Rental rentalPom = null;
+                        for (Rental rental : management.getActiveRentals()) {
+                            if (rental.getEquipment().getId() == equipmentIdToReturn) {
+                                rentalPom = rental;
+                                break;
+                            }
+                        }
+                        if (rentalPom != null) { //sprzęt znaleziono
+                            management.returnEquipment(rentalPom);
+                            rentalPom.getEquipment().setAvailable();
+                            System.out.println("Pomyślnie zwrócono sprzęt: " + rentalPom.getEquipment().getName());
+                        } else {
+                            System.out.println("Nie ma takiego wyporzyczenia!");
+                        }
                         break;
                     }
                     default:
