@@ -28,8 +28,7 @@ public abstract class Equipment {
         }
     }
 
-    public boolean canBeRentedBy(User user){
-    }
+    public abstract boolean canBeRentedBy(User user);
 
     public int getId() {
         return this.id;
@@ -43,5 +42,5 @@ public abstract class Equipment {
         return this.price;
     }
 
-    public boolean getRentalStatus(){return this.rentalStatus}
+    public boolean getRentalStatus(){return this.rentalStatus;}
 }

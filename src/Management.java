@@ -23,6 +23,7 @@ public class Management {
 
         this.rentalData = new RentalData("rentals.txt",userList,equipmentList);
         this.rentalHistory = rentalData.load();
+        this.activeRentals = new ArrayList<>();
     }
 
     public void addUser(User user){
