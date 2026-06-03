@@ -67,6 +67,7 @@ public class Management {
         equipment.setRented();
         activeRentals.add(newRental);
         System.out.println("Pomyślnie wypożyczono: " + equipment.getName() + " dla użytkownika: " + user.getName());
+        System.out.printf("Kwota do zapłaty: %.2f zł\n", newRental.getTotalCost());
     }
 
     public void returnEquipment(Rental rental){
@@ -76,7 +77,16 @@ public class Management {
 
     private double calculateTotalCost(Equipment equipment, LocalDateTime startDate, LocalDateTime endDate){
         int numOfDays = Period.between(startDate.toLocalDate(), endDate.toLocalDate()).getDays();
-        return equipment.getPrice() * 0.05 * numOfDays;
+        if (numOfDays <= 0) { //jak 0 dni to liczymy jako 1 dzień
+            numOfDays = 1;
+        }
+        double pricePerDayType = 0.0;
+        if (equipment instanceof LightEquipment) {
+            pricePerDayType = 0.03;
+        } else if (equipment instanceof HeavyEquipment) {
+            pricePerDayType = 0.08;
+        }
+        return equipment.getPrice() * pricePerDayType * numOfDays;
     }
 
     public List<User> getUserList() {
