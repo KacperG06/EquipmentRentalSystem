@@ -39,7 +39,7 @@ public class Main {
                                 System.out.println("Numer telefonu musi skaldac sie z 9 cyfr");
                             }
                         } while (!checkPhoneNmber(phoneNumber));
-                        String email = readSafely(scanner, "Podaj emial");
+                        String email = readSafely(scanner, "Podaj email");
                         String pesel = "";
                         boolean peselTaken = false;
                         do {
@@ -320,6 +320,5 @@ public class Main {
         }
         return false;
     }
-
 
 }
