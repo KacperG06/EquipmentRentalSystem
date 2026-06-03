@@ -1,5 +1,4 @@
-import java.io.FileOutputStream;
-import java.sql.SQLOutput;
+import javax.swing.*;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
@@ -14,10 +13,8 @@ public class Main {
         String rentalsFile = scanner.nextLine();
         Management management = new Management(usersFile, equimentFile, rentalsFile);
 
-        //Interfejs
         int option = -1;
         do {
-            System.out.println("Wybierz opcje: ");
             System.out.println("1.Dodaj klienta");
             System.out.println("2.Dodaj sprzęt ciężki");
             System.out.println("3.Dodaj sprzęt lekki");
@@ -28,29 +25,35 @@ public class Main {
             System.out.println("8.wyswietl sprzet dla danego uzytkowka");
             System.out.println("9.wyswietl uzytkownikow dla danego sprzetu");
             System.out.println("0.Zamknij i zapisz program");
-            option = Integer.parseInt(scanner.nextLine());
+            System.out.print("Wybierz opcje: ");
+            option = readIntSafely(scanner, "");
 
                 switch (option) {
                     case 1: {
-                        System.out.print("Podaj imie: ");
-                        String name = scanner.nextLine();
-                        System.out.print("Podaj nazwisko: ");
-                        String surname = scanner.nextLine();
-                        System.out.print("Podaj numer telefonu: ");
-                        String phoneNumber = scanner.nextLine();
-                        System.out.print("Podaj email: ");
-                        String email = scanner.nextLine();
-                        String pesel = "";
+                        String name = readSafely(scanner, "Podaj imię: ");
+                        String surname = readSafely(scanner, "Podaj nazwisko: ");
+                        String phoneNumber = "";
                         do {
-                            System.out.print("Podaj pesel (11 znakow): ");
-                            pesel = scanner.nextLine();
-                            if (!checkPesel(pesel)) {
-                                System.out.println("Pesel musi zawierac 11 znaków");
+                            phoneNumber = readSafely(scanner, "Podaj numer telefonu 9 cyfr: ");
+                            if (!checkPhoneNmber(phoneNumber)){
+                                System.out.println("Numer telefonu musi skaldac sie z 9 cyfr");
                             }
-                        } while (!checkPesel(pesel));
+                        } while (!checkPhoneNmber(phoneNumber));
+                        String email = readSafely(scanner, "Podaj emial");
+                        String pesel = "";
+                        boolean peselTaken = false;
+                        do {
+                            System.out.print("Podaj pesel 11 cyfr: ");
+                            pesel = scanner.nextLine();
 
-                        System.out.print("Podaj wiek: ");
-                        int age = Integer.parseInt(scanner.nextLine());
+                            peselTaken = isPeselTaken(pesel, management);
+                            if (!checkPesel(pesel)) {
+                                System.out.println("Pesel musi zawierac 11 cyfr");
+                            } else if(peselTaken){
+                                System.out.println("Uyztkownik o takim numerze pesel juz istnieje");
+                            }
+                        } while (!checkPesel(pesel) || peselTaken);
+                        int age = readIntSafely(scanner, "Podaj wiek: ");
                         boolean driverLicense = false;
                         String pomDl;
                         do {
@@ -67,12 +70,9 @@ public class Main {
                         break;
                     }
                     case 2: {
-                        System.out.print("Podaj id sprzętu: ");
-                        int id = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Podaj nazwę sprzętu: ");
-                        String equimpentName = scanner.nextLine();
-                        System.out.print("Podaj cenę sprzętu: ");
-                        double price = Double.parseDouble(scanner.nextLine());
+                        int id = readIntSafely(scanner, "Podaj id sprzetu: ");
+                        String equimpentName = readSafely(scanner, "Podaj nazwę sprzętu: ");
+                        double price = readDoubleSafely(scanner, "Podaj cenę sprzętu: ");
                         boolean driverLicenseEq = false;
                         String pomDlE;
                         do {
@@ -87,8 +87,7 @@ public class Main {
 
                         String licensePlate = "";
                         do {
-                            System.out.print("Podaj numer rejestracyjny pojazdy (5 znakow): ");
-                            licensePlate = scanner.nextLine();
+                            licensePlate = readSafely(scanner, "Podaj numer rejestracyjny pojazdy (5 znakow))");
                             if (!checkLicensePlate(licensePlate)) {
                                 System.out.println("Tablica rejestracyjna musi miec 5 znaków!");
                             }
@@ -97,12 +96,9 @@ public class Main {
                         break;
                     }
                     case 3: {
-                        System.out.print("Podaj id sprzętu: ");
-                        int id = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Podaj nazwę sprzętu: ");
-                        String equimpentName = scanner.nextLine();
-                        System.out.print("Podaj cenę sprzętu: ");
-                        double price = Double.parseDouble(scanner.nextLine());
+                        int id = readIntSafely(scanner, "Podaj id sprzętu: ");
+                        String equimpentName =readSafely(scanner, "Podaj nazwę sprzetu: ");
+                        double price = readDoubleSafely(scanner, "Podaj cene sprzetu: ");
                         boolean transport = false;
                         String pomT;
                         do {
@@ -121,15 +117,12 @@ public class Main {
                     case 4: {
                         String peselR = "";
                         do {
-                            System.out.print("Podaj pesel (11 znakow): ");
-                            peselR = scanner.nextLine();
+                            peselR = readSafely(scanner, "Podaj pesel: ");
                             if (!checkPesel(peselR)) {
-                                System.out.println("Pesel musi zawierac 11 znaków");
+                                System.out.println("Pesel musi zawierac 11 cyfr");
                             }
                         } while (!checkPesel(peselR));
-
-                        System.out.print("Podaj id sprzetu do wypozycenia: ");
-                        int equipmentIdR = Integer.parseInt(scanner.nextLine());
+                        int equipmentIdR = readIntSafely(scanner, "Podaj id sprzetu do wypozycenia: ");
                         User userFound = null;
                         Equipment founfEquipment = null;
 
@@ -146,9 +139,7 @@ public class Main {
                                 break;
                             }
                         }
-
-                        System.out.print("Na ile dni chcesz wypozyczyc? ");
-                        int days = Integer.parseInt(scanner.nextLine());
+                        int days = readIntSafely(scanner, "Na ile dni chcesz wypozyczyc?: ");
 
                         LocalDateTime endDate = LocalDateTime.now().plusDays(days);
                         try {
@@ -167,8 +158,7 @@ public class Main {
                         break;
                     }
                     case 5: {
-                        System.out.print("Podaj id sprzętu, który chcesz zwrócić: ");
-                        int equipmentIdToReturn = Integer.parseInt(scanner.nextLine());
+                        int equipmentIdToReturn = readIntSafely(scanner, "Podaj id sprzętu, który chcesz zwrócić: ");
                         Rental rentalPom = null;
                         for (Rental rental : management.getActiveRentals()) {
                             if (rental.getEquipment().getId() == equipmentIdToReturn) {
@@ -203,10 +193,9 @@ public class Main {
                         String peselSearch = "";
                         boolean foundUser= false;
                         do {
-                            System.out.print("Podaj pesel aby sprawdzic wypozyczenia (11 znakow): ");
-                            peselSearch = scanner.nextLine();
+                            peselSearch = readSafely(scanner, "Podaj pesel aby sprawdzic wypozyczenia (11 znakow): ");
                             if (!checkPesel(peselSearch)) {
-                                System.out.println("Pesel musi zawierac 11 znaków");
+                                System.out.println("Pesel musi zawierac 11 cyfr");
                             }
                         } while (!checkPesel(peselSearch));
                         System.out.println("Sprzet wypozyczony przez: " + peselSearch);
@@ -229,8 +218,7 @@ public class Main {
                         break;
                     }
                     case 9:{
-                        System.out.print("Podaj id sprzetu ktorego szukasz: ");
-                        int equipmentSearchId = Integer.parseInt(scanner.nextLine());
+                        int equipmentSearchId = readIntSafely(scanner, "Podaj id sprzetu ktorego szukasz: ");
                         boolean foundEquipment = false;
 
                         for (Rental rental : management.getActiveRentals()){
@@ -259,7 +247,15 @@ public class Main {
     }
 
     private static boolean checkPesel(String pesel){
-        if (pesel.length() == 11){
+        if (pesel.matches("\\d{11}")){
+            return true;
+        }
+        else return false;
+
+    }
+
+    private static boolean checkPhoneNmber(String phoneNumber){
+        if (phoneNumber.matches("\\d{9}")){
             return true;
         }
         else return false;
@@ -281,4 +277,49 @@ public class Main {
             return false;
         }
     }
+
+    private static String readSafely(Scanner scanner, String question){
+        String input;
+        do {
+            System.out.println(question);
+            input = scanner.nextLine().trim();
+            if (input.isEmpty()){
+                System.out.println("Pole nie moze byc puste");
+            }
+        }while (input.isEmpty());
+        return input;
+    }
+
+    private static int readIntSafely(Scanner scanner, String question) {
+        while (true) {
+            System.out.print(question);
+            try {
+                return Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Wpisz liczbę całkowitą!");
+            }
+        }
+    }
+
+    private static double readDoubleSafely(Scanner scanner, String question) {
+        while (true) {
+            System.out.print(question);
+            try {
+                return Double.parseDouble(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Wpisz liczbę poprawna kwote!");
+            }
+        }
+    }
+
+    private static boolean isPeselTaken(String pesel, Management management){
+        for (User user : management.getUserList()){
+            if (user.getPesel().equals(pesel)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 }
