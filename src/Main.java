@@ -24,6 +24,8 @@ public class Main {
             System.out.println("7.Wyswietl caly asortyment wypozyczalni");
             System.out.println("8.wyswietl sprzet dla danego uzytkowka");
             System.out.println("9.wyswietl uzytkownikow dla danego sprzetu");
+            System.out.println("10.wyswietl aktualne wypozyczenia");
+            System.out.println("11.wyswietl historie wypozyczenia");
             System.out.println("0.Zamknij i zapisz program");
             System.out.print("Wybierz opcje: ");
             option = readIntSafely(scanner, "");
@@ -233,6 +235,31 @@ public class Main {
                         }
                         break;
                     }
+                    case 10:{
+                        System.out.println("Lista obecnych wypozyczen");
+                        if (management.getActiveRentals().isEmpty()){
+                            System.out.println("Brak aktywnych wypozyczen");
+                        } else {
+                            for (Rental rental : management.getActiveRentals()){
+                                System.out.println("|Id: "+rental.getId() + " |Id sprzetu: " + rental.getEquipment().getId() +
+                                        "|Pesel klienta: " + rental.getUser().getPesel() + " |Łączny koszt: " + rental.getTotalCost() + " |");
+                            }
+                        }
+                        break;
+                    }
+                    case 11: {
+                        System.out.println("Lista histori wypozyczen");
+                        if (management.getRentalHistory().isEmpty()){
+                            System.out.println("Brak histori wypozyczen");
+                        } else {
+                            for (Rental rental : management.getRentalHistory()){
+                                System.out.println("|Id: "+rental.getId() + " |Id sprzetu: " + rental.getEquipment().getId() +
+                                        "|Pesel klienta: " + rental.getUser().getPesel() + " |Łączny koszt: " + rental.getTotalCost() + " |");
+                            }
+                        }
+
+                        break;
+                    }
                     default:
                         System.out.println("Wybierz poprawna opcje! ");
                         break;
@@ -281,7 +308,7 @@ public class Main {
     private static String readSafely(Scanner scanner, String question){
         String input;
         do {
-            System.out.println(question);
+            System.out.print(question);
             input = scanner.nextLine().trim();
             if (input.isEmpty()){
                 System.out.println("Pole nie moze byc puste");

@@ -1,0 +1,2 @@
+1;Kopara;200000.0;false;true;wos21
+2;deska;400.0;false;false
