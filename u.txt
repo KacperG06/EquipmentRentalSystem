@@ -1,2 +1,0 @@
-Adam;Kowalski;234234343;kowal@gmail.com;11111111111;34;true
-Marek;Towarek;567432212;towarek@gmail.com;22222222222;12;false
