@@ -168,7 +168,7 @@ public class Main {
                                 break;
                             }
                         }
-                        if (rentalPom != null) { //sprzęt znaleziono
+                        if (rentalPom != null) { //if sprzęt znaleziono
                             management.returnEquipment(rentalPom);
                             rentalPom.getEquipment().setAvailable();
                             System.out.println("Pomyślnie zwrócono sprzęt: " + rentalPom.getEquipment().getName());

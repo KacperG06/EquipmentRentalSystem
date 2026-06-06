@@ -36,6 +36,9 @@ public class Management {
             else {
                 this.rentalHistory.add(rental);
             }
+            if (rental.getId() > lastRentalIdNumber){
+                lastRentalIdNumber = rental.getId();
+            }
         }
     }
 
@@ -77,14 +80,14 @@ public class Management {
 
     private double calculateTotalCost(Equipment equipment, LocalDateTime startDate, LocalDateTime endDate){
         int numOfDays = Period.between(startDate.toLocalDate(), endDate.toLocalDate()).getDays();
-        if (numOfDays <= 0) { //jak 0 dni to liczymy jako 1 dzień
+        if (numOfDays <= 0) { //zero dni liczmy jako 1 dzien
             numOfDays = 1;
         }
         double pricePerDayType = 0.0;
         if (equipment instanceof LightEquipment) {
-            pricePerDayType = 0.03;
+            pricePerDayType = 0.01;
         } else if (equipment instanceof HeavyEquipment) {
-            pricePerDayType = 0.08;
+            pricePerDayType = 0.008;
         }
         return equipment.getPrice() * pricePerDayType * numOfDays;
     }

@@ -1,0 +1,4 @@
+Anna;Kowalska;300400500;Anna@gmail.com;11111111111;23;true
+Adam;Nowak;300200111;adam@wp.pl;77777777777;50;true
+Marek;Guz;341241242;kmarek@gmail.com;65666666666;66;false
+Ola;Kowalska;474672564;Olka@wp.pl;90909090909;36;false

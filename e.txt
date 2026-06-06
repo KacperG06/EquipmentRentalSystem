@@ -1,0 +1,4 @@
+1;Koparka;100000.0;false;true;BI217
+2;Traktor;35000.0;true;true;BI111
+3;Wiertarka;350.0;false;false
+4;Deska sufringowa;600.0;false;true
